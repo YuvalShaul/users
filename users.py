@@ -94,26 +94,8 @@ def update_user(user_id):
         'updated_at': datetime.now().isoformat()
     })
     
-    return jsonify(users[user_id])
+    return jsonify(users[user_id]), 200
 
-# PATCH - PATCH /users/<id>
-@app.route('/api/users/<user_id>', methods=['PATCH'])
-def patch_user(user_id):
-    if user_id not in users:
-        return jsonify({'error': 'User not found'}), 404
-    
-    if not request.is_json:
-        return jsonify({'error': 'Content-Type must be application/json'}), 400
-    
-    data = request.get_json()
-    
-    # Update only provided fields
-    for key in ['name', 'email']:
-        if key in data:
-            users[user_id][key] = data[key]
-    
-    users[user_id]['updated_at'] = datetime.now().isoformat()
-    return jsonify(users[user_id])
 
 # DELETE - DELETE /users/<id>
 @app.route('/api/users/<user_id>', methods=['DELETE'])
@@ -127,14 +109,7 @@ def delete_user(user_id):
         'user': deleted_user
     })
 
-# Health check endpoint
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    return jsonify({
-        'status': 'healthy',
-        'timestamp': datetime.now().isoformat(),
-        'users_count': len(users)
-    })
+
 
 if __name__ == '__main__':
     app.run(debug=True)
